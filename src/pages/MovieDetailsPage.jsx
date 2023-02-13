@@ -1,4 +1,10 @@
-import { Outlet, Link, useParams, useLocation } from 'react-router-dom';
+import {
+  Outlet,
+  Link,
+  useParams,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
 import { useMovieDetails } from 'utils/hooks/useMovieDetails';
 
 const MovieDetailsPage = () => {
@@ -6,15 +12,16 @@ const MovieDetailsPage = () => {
   const { movieDetails } = useMovieDetails(movieId);
 
   const location = useLocation();
-  const backLinkHref = location.state?.from ?? '/';
+  const navigate = useNavigate();
+  const hendleGoBack = () => {
+    navigate(location.state.from);
+  };
 
   return (
     <div>
-      <Link to={backLinkHref}>
-        {' '}
-        <button type="button">Go back</button>
-      </Link>
-
+      <button type="button" onClick={hendleGoBack}>
+        Go back
+      </button>
       <h2>
         {movieDetails.title} (
         {movieDetails.release_date
@@ -49,10 +56,14 @@ const MovieDetailsPage = () => {
 
       <ul>
         <li>
-          <Link to="cast">Cast</Link>
+          <Link to="cast" state={{ from: location.state.from }}>
+            Cast
+          </Link>
         </li>
         <li>
-          <Link to="reviews">Reviews</Link>
+          <Link to="reviews" state={{ from: location.state.from }}>
+            Reviews
+          </Link>
         </li>
       </ul>
       <Outlet />
